@@ -161,14 +161,12 @@ class AuthController extends BaseController
         }
 
         // Avatar upload disabled as per new requirements
-        /*
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
             $avatarPath = $this->uploadFile('avatar', 'avatars', ALLOWED_IMAGE_TYPES);
             if ($avatarPath) {
                 $data['avatar'] = $avatarPath;
             }
         }
-        */
 
         if (empty($data)) {
             $this->json([

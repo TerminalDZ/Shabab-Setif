@@ -131,7 +131,7 @@ class Attendance extends BaseModel
      */
     public static function userHistory(int $userId, int $limit = 20): array
     {
-        $sql = "SELECT a.*, act.title as activity_title, act.date as activity_date
+        $sql = "SELECT a.*, a.timestamp as marked_at, act.title as activity_title, act.date as activity_date
                 FROM attendance a
                 INNER JOIN activities act ON a.activity_id = act.id
                 WHERE a.user_id = ?

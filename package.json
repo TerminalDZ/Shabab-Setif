@@ -1,0 +1,33 @@
+{
+  "name": "html",
+  "version": "1.0.0",
+  "description": "![Shabab Setif](https://img.shields.io/badge/Status-Active-brightgreen) ![License](https://img.shields.io/badge/License-MIT-blue) ![PHP](https://img.shields.io/badge/PHP-8.2-777bb4) ![Laravel](https://img.shields.io/badge/Style-MVC-ff2d20)",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/tailwindcss -i ./src/css/app.css -o ./public/assets/css/app.css --minify",
+    "watch": "./node_modules/.bin/tailwindcss -i ./src/css/app.css -o ./public/assets/css/app.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TerminalDZ/Shabab-Setif.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TerminalDZ/Shabab-Setif/issues"
+  },
+  "homepage": "https://github.com/TerminalDZ/Shabab-Setif#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19"
+  },
+  "dependencies": {
+    "dropzone": "^6.0.0-beta.2"
+  }
+}

@@ -4,171 +4,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بطاقة العضوية |
-        <?= htmlspecialchars($user->full_name) ?>
-    </title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <title>بطاقة عضوية - <?= htmlspecialchars($user->full_name) ?></title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap"
+        rel="stylesheet">
+    <link href="/assets/css/app.css" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Tajawal', sans-serif;
-        }
-
         body {
-            background: #f0f0f0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .card-container {
-            perspective: 1000px;
-        }
-
-        .membership-card {
-            width: 400px;
-            height: 250px;
-            background: #2d6a4f;
-            border-radius: 20px;
-            padding: 25px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
-        }
-
-        .card-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            position: relative;
-            z-index: 1;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .logo span {
-            display: block;
-            font-size: 12px;
-            font-weight: 400;
-            opacity: 0.8;
-        }
-
-        .member-photo {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.5);
-            object-fit: cover;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .card-body {
-            margin-top: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .member-name {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .member-role {
-            font-size: 14px;
-            opacity: 0.8;
-            margin-bottom: 15px;
-        }
-
-        .card-id {
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: 3px;
-            font-family: monospace;
-        }
-
-        .card-footer {
-            position: absolute;
-            bottom: 20px;
-            left: 25px;
-            right: 25px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            opacity: 0.7;
-        }
-
-        .print-btn {
-            margin-top: 20px;
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
+            background: #f3f4f6;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
         @media print {
-            .print-btn {
-                display: none;
-            }
-
             body {
                 background: white;
             }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .card-container {
+                box-shadow: none !important;
+                margin: 0;
+            }
+        }
+
+        .card-bg-pattern {
+            background-image: radial-gradient(#ffffff 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.1;
         }
     </style>
 </head>
 
-<body>
-    <div class="card-container">
-        <div class="membership-card">
-            <div class="card-pattern"></div>
-            <div class="card-header">
-                <div class="logo">شباب سطيف<span>جمعية شبابية تطوعية</span></div>
-                <img src="<?= $user->avatar ?? '/assets/images/default-avatar.png' ?>" class="member-photo" alt="">
-            </div>
-            <div class="card-body">
-                <div class="member-name">
-                    <?= htmlspecialchars($user->full_name) ?>
+<body class="flex items-center justify-center min-h-screen p-4 font-tajawal">
+
+    <div class="space-y-8 text-center">
+        <!-- The Card -->
+        <div
+            class="card-container relative w-[400px] h-[250px] bg-gradient-to-br from-primary to-green-800 rounded-[20px] shadow-2xl overflow-hidden text-white text-right mx-auto transform transition-transform hover:scale-105 duration-300">
+            <!-- Background Elements -->
+            <div class="absolute inset-0 card-bg-pattern"></div>
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
+            <div class="absolute bottom-0 left-0 w-40 h-40 bg-black/10 rounded-full blur-2xl -ml-10 -mb-10"></div>
+
+            <!-- Content -->
+            <div class="relative z-10 p-6 h-full flex flex-col justify-between">
+                <!-- Header -->
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h1 class="text-xl font-bold tracking-tight">شباب سطيف</h1>
+                        <p class="text-[10px] text-white/80 font-light">جمعية شبانية تطوعية</p>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-white rounded-xl shadow-lg flex items-center justify-center text-primary font-bold text-lg">
+                        SS
+                    </div>
                 </div>
-                <div class="member-role">
-                    <?= $committee ? htmlspecialchars($committee->name) : 'عضو' ?>
+
+                <!-- Body -->
+                <div class="flex items-center gap-4 mt-2">
+                    <div class="relative">
+                        <div class="w-20 h-20 rounded-full p-1 bg-white/20">
+                            <img src="<?= $user->avatar ?? '/assets/images/default-avatar.png' ?>"
+                                class="w-full h-full rounded-full object-cover bg-white">
+                        </div>
+                        <?php if ($user->role === 'admin'): ?>
+                            <div
+                                class="absolute -bottom-1 -right-1 bg-yellow-400 text-yellow-900 rounded-full p-1 shadow-sm">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 16 16">
+                                    <path
+                                        d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
+                                </svg></div>
+                        <?php endif; ?>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold mb-0.5"><?= htmlspecialchars($user->full_name) ?></h2>
+                        <span class="inline-block px-2 py-0.5 rounded text-[10px] bg-white/20 border border-white/10">
+                            <?= $committee ? htmlspecialchars($committee->name) : ($user->role === 'admin' ? 'الإدارة العامة' : 'عضو نشط') ?>
+                        </span>
+                    </div>
                 </div>
-                <div class="card-id">
-                    <?= $user->member_card_id ?>
+
+                <!-- Footer -->
+                <div class="flex justify-between items-end mt-auto">
+                    <div>
+                        <p class="text-[8px] text-white/60 mb-0.5">رقم العضوية</p>
+                        <p
+                            class="text-lg font-mono font-bold tracking-widest text-yellow-400 shadow-black/5 drop-shadow-sm">
+                            <?= $user->member_card_id ?></p>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-[8px] text-white/60">تاريخ الإصدار</p>
+                        <p class="text-xs font-medium"><?= date('Y-m-d') ?></p>
+                    </div>
                 </div>
-            </div>
-            <div class="card-footer">
-                <span>تاريخ الانضمام:
-                    <?= date('Y-m-d', strtotime($user->created_at)) ?>
-                </span>
-                <span>بطاقة عضوية رسمية</span>
             </div>
         </div>
-        <center><button class="print-btn" onclick="window.print()"><i class="bi bi-printer"></i> طباعة البطاقة</button>
-        </center>
+
+        <!-- Controls -->
+        <div class="no-print space-y-4">
+            <button onclick="window.print()"
+                class="px-8 py-3 bg-gray-900 text-white rounded-xl font-bold shadow-xl hover:bg-black transition-transform hover:-translate-y-1 flex items-center justify-center gap-2 mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer"
+                    viewBox="0 0 16 16">
+                    <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
+                    <path
+                        d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z" />
+                </svg>
+                <span>طباعة البطاقة</span>
+            </button>
+            <p class="text-sm text-gray-500">نصيحة: تأكد من تفعيل "Background Graphics" في إعدادات الطباعة</p>
+        </div>
     </div>
+
 </body>
 
 </html>

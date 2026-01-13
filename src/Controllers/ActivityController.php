@@ -217,7 +217,6 @@ class ActivityController extends BaseController
         $activity = Activity::create($data);
 
         // Image uploads are disabled as per new requirements
-        /*
         if (isset($_FILES['images'])) {
             $imagePaths = $this->uploadMultipleFiles('images', 'activities', ALLOWED_IMAGE_TYPES);
             if (!empty($imagePaths)) {
@@ -226,7 +225,6 @@ class ActivityController extends BaseController
                 ]);
             }
         }
-        */
 
         $this->json([
             'success' => true,
@@ -274,13 +272,11 @@ class ActivityController extends BaseController
             $data['committee_id'] = $committeeId;
 
         // Image uploads are disabled as per new requirements
-        /*
         if (isset($_FILES['images']) && $_FILES['images']['error'][0] !== UPLOAD_ERR_NO_FILE) {
             $newImages = $this->uploadMultipleFiles('images', 'activities', ALLOWED_IMAGE_TYPES);
             $existingImages = $activity->getImages();
             $data['images_json'] = json_encode(array_merge($existingImages, $newImages));
         }
-        */
 
         if (!empty($data)) {
             $activity->update($data);

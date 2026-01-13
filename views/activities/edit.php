@@ -1,224 +1,310 @@
-<!-- Activity Edit Page -->
-<div class="container-fluid py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="page-title"><i class="bi bi-pencil me-2"></i>تعديل النشاط</h2>
-                    <p class="text-muted mb-0">تعديل بيانات النشاط</p>
-                </div>
-                <a href="/activities/<?= $activity->id ?>" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-right me-1"></i>رجوع
-                </a>
-            </div>
+<?php
+$title = 'تعديل النشاط: ' . htmlspecialchars($activity->title);
+ob_start();
+?>
 
-            <div class="card">
-                <div class="card-body">
-                    <form id="editActivityForm" enctype="multipart/form-data">
-                        <input type="hidden" name="activity_id" value="<?= $activity->id ?>">
+<div class="px-4 py-6 md:px-8">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-l from-primary to-green-600">
+                تعديل النشاط
+            </h1>
+            <p class="text-gray-500 mt-2">تحديث بيانات النشاط: <?= htmlspecialchars($activity->title) ?></p>
+        </div>
+        <a href="/activities/<?= $activity->id ?>"
+            class="flex items-center gap-2 text-gray-500 hover:text-primary transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100">
+            <i class="bi bi-arrow-right"></i>
+            <span>رجوع للتفاصيل</span>
+        </a>
+    </div>
 
-                        <div class="row g-4">
-                            <div class="col-12">
-                                <label class="form-label">عنوان النشاط <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="title"
-                                    value="<?= htmlspecialchars($activity->title) ?>" required>
-                            </div>
+    <!-- Edit Form -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+        <div class="p-6 md:p-8">
+            <form id="editActivityForm" class="space-y-6">
+                <!-- Main Info -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-gray-700">عنوان النشاط <span
+                                class="text-red-500">*</span></label>
+                        <input type="text" name="title" required value="<?= htmlspecialchars($activity->title) ?>"
+                            class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none">
+                    </div>
 
-                            <div class="col-12">
-                                <label class="form-label">وصف النشاط</label>
-                                <textarea class="form-control" name="description"
-                                    rows="4"><?= htmlspecialchars($activity->description ?? '') ?></textarea>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">التاريخ <span class="text-danger">*</span></label>
-                                <input type="date" class="form-control" name="date" value="<?= $activity->date ?>"
-                                    required>
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">الوقت</label>
-                                <input type="time" class="form-control" name="time" value="<?= $activity->time ?>">
-                            </div>
-
-                            <div class="col-md-4">
-                                <label class="form-label">النقاط</label>
-                                <input type="number" class="form-control" name="points_value"
-                                    value="<?= $activity->points_value ?>" min="1" max="100">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">المكان</label>
-                                <input type="text" class="form-control" name="location"
-                                    value="<?= htmlspecialchars($activity->location ?? '') ?>">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label">الحالة</label>
-                                <select class="form-select" name="status">
-                                    <option value="upcoming" <?= $activity->status === 'upcoming' ? 'selected' : '' ?>>قادم
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-gray-700">اللجنة المنظمة</label>
+                        <div class="relative">
+                            <select name="committee_id"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none appearance-none cursor-pointer">
+                                <option value="">بدون لجنة (عام)</option>
+                                <?php foreach ($committees as $committee): ?>
+                                    <option value="<?= $committee['id'] ?>" <?= ($activity->committee_id == $committee['id']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($committee['name']) ?>
                                     </option>
-                                    <option value="completed" <?= $activity->status === 'completed' ? 'selected' : '' ?>>
-                                        مكتمل</option>
-                                    <option value="cancelled" <?= $activity->status === 'cancelled' ? 'selected' : '' ?>>
-                                        ملغي</option>
-                                </select>
+                                <?php endforeach; ?>
+                            </select>
+                            <div
+                                class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-500">
+                                <i class="bi bi-chevron-down text-xs"></i>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="col-12">
-                                <label class="form-label">اللجنة المنظمة</label>
-                                <select class="form-select" name="committee_id">
-                                    <option value="">نشاط عام</option>
-                                    <?php foreach ($committees as $c): ?>
-                                        <option value="<?= $c->id ?>" <?= $activity->committee_id == $c->id ? 'selected' : '' ?>><?= htmlspecialchars($c->name) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-gray-700">التاريخ <span
+                                class="text-red-500">*</span></label>
+                        <input type="date" name="date" required value="<?= $activity->date ?>"
+                            class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-gray-700">التوقيت</label>
+                        <input type="time" name="time" value="<?= $activity->time ?>"
+                            class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-gray-700">المكان</label>
+                        <div class="relative">
+                            <input type="text" name="location"
+                                value="<?= htmlspecialchars($activity->location ?? '') ?>"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none pl-10">
+                            <i class="bi bi-geo-alt absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-gray-700">الحالة</label>
+                        <div class="relative">
+                            <select name="status"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none appearance-none cursor-pointer">
+                                <option value="upcoming" <?= $activity->status === 'upcoming' ? 'selected' : '' ?>>قادم
+                                    (مفتوح للتسجيل)</option>
+                                <option value="completed" <?= $activity->status === 'completed' ? 'selected' : '' ?>>مكتمل
+                                </option>
+                                <option value="cancelled" <?= $activity->status === 'cancelled' ? 'selected' : '' ?>>ملغي
+                                </option>
+                            </select>
+                            <div
+                                class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-500">
+                                <i class="bi bi-chevron-down text-xs"></i>
                             </div>
-
-                            <!-- Current Images -->
-                            <?php
-                            $currentImages = json_decode($activity->images_json ?? '[]', true);
-                            if (!empty($currentImages)):
-                                ?>
-                                <div class="col-12">
-                                    <label class="form-label">الصور الحالية</label>
-                                    <div class="row g-2" id="currentImages">
-                                        <?php foreach ($currentImages as $i => $img): ?>
-                                            <div class="col-4 col-md-2 position-relative" data-image="<?= $img ?>">
-                                                <img src="<?= $img ?>" class="img-fluid rounded"
-                                                    style="height:80px;width:100%;object-fit:cover;">
-                                                <button type="button"
-                                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1"
-                                                    onclick="removeImage(this)" style="padding:2px 6px;font-size:10px;">
-                                                    <i class="bi bi-x"></i>
-                                                </button>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    </div>
-                                    <input type="hidden" name="remove_images" id="removeImages" value="">
-                                </div>
-                            <?php endif; ?>
-
-                            <!-- Images disabled -->
                         </div>
+                    </div>
 
-                        <hr class="my-4">
-
-                        <div class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-outline-danger" onclick="deleteActivity()">
-                                <i class="bi bi-trash me-1"></i>حذف النشاط
-                            </button>
-                            <button type="submit" class="btn btn-primary" id="submitBtn">
-                                <i class="bi bi-check-lg me-1"></i>حفظ التعديلات
-                            </button>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-gray-700">نقاط النشاط</label>
+                        <div class="relative">
+                            <input type="number" name="points_value" value="<?= $activity->points_value ?>" min="0"
+                                class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none pl-10">
+                            <i class="bi bi-star absolute left-4 top-1/2 -translate-y-1/2 text-yellow-500 text-lg"></i>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-gray-700">وصف النشاط</label>
+                    <textarea name="description" rows="4"
+                        class="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none resize-none"><?= htmlspecialchars($activity->description ?? '') ?></textarea>
+                </div>
+
+                <!-- Current Images -->
+                <?php $currentImages = json_decode($activity->images_json ?? '[]', true); ?>
+                <?php if (!empty($currentImages)): ?>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-bold text-gray-700">الصور الحالية</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <?php foreach ($currentImages as $img): ?>
+                                <div class="relative group rounded-xl overflow-hidden" id="img-container-<?= md5($img) ?>">
+                                    <img src="<?= $img ?>"
+                                        class="w-full h-32 object-cover transition-transform group-hover:scale-105" alt="">
+                                    <button type="button" onclick="removeExistingImage('<?= $img ?>', '<?= md5($img) ?>')"
+                                        class="absolute top-2 left-2 bg-red-500 text-white rounded-full p-1.5 shadow-lg transform scale-0 group-hover:scale-100 transition-all hover:bg-red-600">
+                                        <i class="bi bi-trash text-sm"></i>
+                                    </button>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <input type="hidden" name="remove_images" id="removeImagesInput" value="">
+                    </div>
+                <?php endif; ?>
+
+                <!-- Dropzone Image Upload -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-bold text-gray-700">إضافة صور جديدة</label>
+                    <div id="activityDropzone"
+                        class="dropzone rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-white hover:border-primary/50 transition-all cursor-pointer min-h-[150px] flex items-center justify-center">
+                        <div class="dz-message text-center">
+                            <div
+                                class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto mb-4">
+                                <i class="bi bi-cloud-arrow-up text-3xl"></i>
+                            </div>
+                            <h3 class="font-bold text-gray-700">اسحب الصور هنا أو اضغط للرفع</h3>
+                            <span class="text-sm text-gray-500 mt-2 block">الحد الأقصى: 5 ميغابايت (JPG, PNG)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delete & Submit -->
+                <div class="flex items-center justify-between pt-6 border-t border-gray-100">
+                    <button type="button" onclick="deleteActivity()"
+                        class="text-red-500 hover:text-red-700 font-bold px-4 py-2 transition-colors flex items-center gap-2">
+                        <i class="bi bi-trash"></i>
+                        <span>حذف النشاط</span>
+                    </button>
+
+                    <div class="flex items-center gap-4">
+                        <a href="/activities/<?= $activity->id ?>"
+                            class="px-6 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-100 transition-colors">إلغاء</a>
+                        <button type="submit" id="submitBtn"
+                            class="px-8 py-3 rounded-xl font-bold bg-primary text-white shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:bg-primary-dark transition-all transform hover:-translate-y-0.5">
+                            إنشاء التعديلات
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
 <script>
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    Dropzone.autoDiscover = false;
     const activityId = <?= $activity->id ?>;
     let removedImages = [];
 
-    // Image preview for new uploads
-    document.getElementById('imagesInput')?.addEventListener('change', function () {
-        const preview = document.getElementById('imagePreview');
-        preview.innerHTML = '';
+    function removeExistingImage(path, hash) {
+        // Since we don't have a direct endpoint to remove one image without saving, 
+        // we'll track removals and send them on submit (or we can assume user wants to remove immediately?
+        // Logic in edit.php lines 98 showed a hidden input 'remove_images'.
+        // I will replicate that logic: track arrays of paths to remove.
+        // Wait, typical logic is: send list of images to KEEP or list to REMOVE.
+        // The previous code had: <input type="hidden" name="remove_images">
 
-        if (this.files.length > 5) {
-            Swal.fire('تنبيه', 'يمكنك اختيار 5 صور كحد أقصى', 'warning');
-            this.value = '';
-            return;
-        }
+        // I'll update the Remove Array
+        removedImages.push(path);
+        document.getElementById('removeImagesInput').value = JSON.stringify(removedImages);
 
-        Array.from(this.files).forEach((file, i) => {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                preview.innerHTML += `
-                <div class="col-4 col-md-2">
-                    <img src="${e.target.result}" class="img-fluid rounded" style="height:80px;width:100%;object-fit:cover;">
-                </div>`;
-            };
-            reader.readAsDataURL(file);
-        });
-    });
+        // Hide visually
+        document.getElementById('img-container-' + hash).style.display = 'none';
 
-    // Remove existing image
-    function removeImage(btn) {
-        const parent = btn.closest('[data-image]');
-        const imagePath = parent.dataset.image;
-        removedImages.push(imagePath);
-        document.getElementById('removeImages').value = JSON.stringify(removedImages);
-        parent.remove();
+        // Optional: Show toast
+        showToast('info', 'سيتم حذف الصورة عند الحفظ');
     }
 
-    // Submit form
-    document.getElementById('editActivityForm').addEventListener('submit', function (e) {
-        e.preventDefault();
+    $(document).ready(function () {
+        const form = document.querySelector('#editActivityForm');
+        let formSubmitting = false;
 
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>جاري الحفظ...';
+        const myDropzone = new Dropzone("#activityDropzone", {
+            url: "/activities/" + activityId + "/update", // It's actually POST /api/activities/{id} or proper route?
+            // ActivityController: update(id) handles it. View calls /activities/{id}/update usually? 
+            // Router: POST /activities/{id}/update -> ActivityController::update
+            // Previous JS used: fetch(`/api/activities/${activityId}`, method: POST)
+            // Let's check Router.php to be sure if I can see it?
+            // Assuming standard path. I'll use /activities/${activityId}/update which routes to update.
+            // Wait, previous JS used /api/activities/${activityId} with POST.
+            // I'll use the same URL I used in previous JS: /api/activities/${activityId} (mapped to update? likely via POST).
+            // Actually, best to use the URL that definitely works.
+            url: "/api/activities/" + activityId,
 
-        const formData = new FormData(this);
-        formData.append('_csrf_token', csrfToken);
+            paramName: "images",
+            maxFilesize: 5,
+            uploadMultiple: true,
+            parallelUploads: 5,
+            acceptedFiles: 'image/*',
+            addRemoveLinks: true,
+            autoProcessQueue: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dictRemoveFile: "حذف",
+            dictCancelUpload: "إلغاء",
+            init: function () {
+                var dz = this;
 
-        fetch(`/api/activities/${activityId}`, {
-            method: 'POST',
-            body: formData
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'تم الحفظ',
-                        text: 'تم تحديث النشاط بنجاح',
-                        confirmButtonText: 'عرض النشاط'
-                    }).then(() => {
-                        window.location.href = '/activities/' + activityId;
-                    });
-                } else {
-                    throw new Error(data.message);
-                }
-            })
-            .catch(err => {
-                Swal.fire('خطأ', err.message || 'حدث خطأ', 'error');
-                btn.disabled = false;
-                btn.innerHTML = '<i class="bi bi-check-lg me-1"></i>حفظ التعديلات';
-            });
-    });
+                $('#editActivityForm').on('submit', function (e) {
+                    e.preventDefault();
+                    if (formSubmitting) return;
 
-    // Delete activity
-    function deleteActivity() {
-        Swal.fire({
-            title: 'حذف النشاط؟',
-            text: 'هل أنت متأكد من حذف هذا النشاط نهائياً؟',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d62828',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'نعم، احذف',
-            cancelButtonText: 'إلغاء'
-        }).then(result => {
-            if (result.isConfirmed) {
-                fetch(`/api/activities/${activityId}`, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `_csrf_token=${csrfToken}`
-                })
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire('تم الحذف', data.message, 'success')
-                                .then(() => window.location.href = '/activities');
-                        }
-                    });
+                    const btn = $('#submitBtn');
+                    formSubmitting = true;
+                    btn.prop('disabled', true).html('جاري الحفظ...');
+
+                    if (dz.getQueuedFiles().length > 0) {
+                        dz.processQueue();
+                    } else {
+                        submitFormManually(new FormData(form));
+                    }
+                });
+
+                this.on("sendingmultiple", function (file, xhr, formData) {
+                    const data = new FormData(form);
+                    for (let pair of data.entries()) {
+                        formData.append(pair[0], pair[1]);
+                    }
+                });
+
+                this.on("successmultiple", function (files, response) {
+                    handleSuccess(response);
+                });
+
+                this.on("errormultiple", function (files, response) {
+                    handleError(response);
+                    btnReset();
+                });
             }
         });
-    }
+
+        function submitFormManually(formData) {
+            $.ajax({
+                url: '/api/activities/' + activityId,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: handleSuccess,
+                error: function (xhr) {
+                    handleError(xhr.responseJSON || { message: 'حدث خطأ' });
+                    btnReset();
+                }
+            });
+        }
+
+        function handleSuccess(response) {
+            if (response.success) {
+                Swal.fire({ title: 'تم الحفظ', text: response.message, icon: 'success', timer: 1500, showConfirmButton: false })
+                    .then(() => window.location.href = '/activities/' + activityId);
+            } else {
+                handleError(response);
+                btnReset();
+            }
+        }
+
+        function handleError(response) {
+            Swal.fire('خطأ', response.message || 'حدث خطأ أثناء الحفظ', 'error');
+        }
+
+        function btnReset() {
+            formSubmitting = false;
+            $('#submitBtn').prop('disabled', false).text('حفظ التعديلات');
+        }
+
+        window.deleteActivity = function () {
+            confirmDelete('سيتم حذف النشاط نهائياً', function () {
+                $.ajax({
+                    url: '/api/activities/' + activityId,
+                    type: 'DELETE',
+                    data: { _csrf_token: $('meta[name="csrf-token"]').attr('content') },
+                    success: function (r) {
+                        if (r.success) window.location.href = '/activities';
+                    }
+                });
+            });
+        }
+    });
 </script>
+
+<?php
+$content = ob_get_clean();
+include __DIR__ . '/../layouts/main.php';
+?>

@@ -1,12 +1,14 @@
 <?php
-/**
- * Shabab Setif - Application Entry Point
- * 
- * @package ShababSetif
- * @version 1.0.0
- */
 
 declare(strict_types=1);
+
+// Handle static files for PHP built-in server
+if (php_sapi_name() === 'cli-server') {
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    if (is_file(__DIR__ . $path)) {
+        return false;
+    }
+}
 
 // Define base path
 define('BASE_PATH', dirname(__DIR__));
